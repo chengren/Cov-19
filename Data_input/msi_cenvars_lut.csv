@@ -1,0 +1,26 @@
+old_names,my_cen_var_names,my_cen_vars1,my_cen_vars,census_label,description
+citizenship_non_citizen,tract_fborn_noncit,B05001_006E,B05001_006,Total Population in the United States Not a U.S. Citizen,"Foreign born, non-citizens"
+fborn_recent_entry_post2010,tract_post2010_fborn,B05005_004E,B05005_004,Population Born Outside the United States Entered 2010 or Later Foreign Born,Recent immigrants post 2010
+fborn_recent_entry_post2010_noncitizen,tract_post2010_fborn_noncit,B05005_006E,B05005_006,Population Born Outside the United States Entered 2010 or Later Foreign Born Not a U.S. Citizen,"Recent immigrants post 2010, non-citizens"
+tract_totpop,tract_totpop,B06001_001E,B06001_001,Total Population in the United States,Total Population in the United States
+immigrant_foreign_born,tract_fborn,B06001_049E,B06001_049,Total Population in the United States Foreign Born,Immigrants including foreign born naturalized and non-citizen
+poverty_totpop,poverty_totpop,B06012_001E,B06012_001,Population in the United States for Whom Poverty Status Is Determined,Denominator for poverty measures
+poverty_100below_fborn,poverty_100below_fborn,B06012_018E,B06012_018,Population in the United States for Whom Poverty Status Is Determined Foreign Born Below 100 Percent of the Poverty Level,Combine for poverty level
+poverty_100to150below_fborn,poverty_100to149below_fborn,B06012_019E,B06012_019,Population in the United States for Whom Poverty Status Is Determined Foreign Born 100 to 149 Percent of the Poverty Level,Combine for poverty level
+nohealth_tot_pop,nohealth_totpop,B27020_001E,B27020_001,Civilian Noninstitutionalized Population,Population for whom health insurance is determined
+nohealth_native,nohealth_native,B27020_006E,B27020_006,Civilian Noninstitutionalized Population Native Born No Health Insurance Coverage,Native born without heath insurance
+nohealth_fborn_nat,nohealth_fborn_nat,B27020_012E,B27020_012,Civilian Noninstitutionalized Population Foreign Born Naturalized No Health Insurance Coverage,No Health Insurance Foreign born naturalized
+nohealth_fborn_noncit,nohealth_fborn_noncit,B27020_017E,B27020_017,Civilian Noninstitutionalized Population Foreign Born Noncitizen No Health Insurance Coverage,No Health Insurance Foreign born non-citizen
+limited_english,limited_english_totpop,C16001_001E,C16001_001,Population 5 Years and Over,Denominator for limited_english
+limited_english,limited_english_spanish,C16001_005E,C16001_005,Population 5 Years and Over Spanish Speak English Less than very Well,Use for limited_english total and standalone filter
+limited_english,limited_english_french,C16001_008E,C16001_008,"Population 5 Years and Over French, Haitian, or Cajun Speak English Less than very Well",Use for limited_english total
+limited_english,limited_english_german,C16001_011E,C16001_011,Population 5 Years and Over German or Other West Germanic Languages Speak English Less than very Well,Use for limited_english total
+limited_english,limited_english_russian,C16001_014E,C16001_014,"Population 5 Years and Over Russian, Polish, or Other Slavic Languages Speak English Less than very Well",Use for limited_english total
+limited_english,limited_english_other_indoeuropean,C16001_017E,C16001_017,Population 5 Years and Over Other Indo-European Languages Speak English Less than very Well,Use for limited_english total
+limited_english,limited_english_korean,C16001_020E,C16001_020,Population 5 Years and Over Korean Speak English Less than very Well,Use for limited_english total and standalone filter
+limited_english,limited_english_chinese,C16001_023E,C16001_023,"Population 5 Years and Over Chinese (Incl. Mandarin, Cantonese) Speak English Less than very Well",Use for limited_english total and standalone filter
+limited_english,limited_english_vietnamese,C16001_026E,C16001_026,Population 5 Years and Over Vietnamese Speak English Less than very Well,Use for limited_english total and standalone filter
+limited_english,limited_english_tagalog,C16001_029E,C16001_029,Population 5 Years and Over Tagalog (Incl. Filipino) Speak English Less than very Well,Use for limited_english total and standalone filter
+limited_english,limited_english_other_api,C16001_032E,C16001_032,Population 5 Years and Over Other Asian and Pacific Island Languages Speak English Less than very Well,Use for limited_english total
+limited_english,limited_english_arabic,C16001_035E,C16001_035,Population 5 Years and Over Arabic Speak English Less than very Well,Use for limited_english total
+limited_english,limited_english_other,C16001_038E,C16001_038,Population 5 Years and Over Other and Unspecified Languages Speak English Less than very Well,Use for limited_english total
