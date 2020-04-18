@@ -49,10 +49,10 @@ states4 <- c('PR','RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA','WA', 'WV', 'WI
 
 # Load cenvar lookup table of vars of interest
 #my_cenvar_df <-read.csv("msi_acs_var_lookup.csv", strip.white = T, stringsAsFactors = F)
-my_cenvar_df <-read.csv("msi_cenvars_lut.csv", strip.white = T, stringsAsFactors = F)
+my_cenvar_df <-read.csv("Data_input/msi_cenvars_lut.csv", strip.white = T, stringsAsFactors = F)
 
 # Fetch the ACS data
-tract_data <- get_acs(geography = "tract", 
+ct_data <- get_acs(geography = "county", 
                          variables = my_cenvar_df$my_cen_vars, 
                          year=2018, 
                          survey="acs5",
@@ -60,7 +60,7 @@ tract_data <- get_acs(geography = "tract",
                          #county = my_counties, 
                          geometry = T,
                          keep_geo_vars = T)
-tract_data1 <- get_acs(geography = "tract", 
+ct_data1 <- get_acs(geography = "county", 
                       variables = my_cenvar_df$my_cen_vars, 
                       year=2018, 
                       survey="acs5",
@@ -68,7 +68,7 @@ tract_data1 <- get_acs(geography = "tract",
                       #county = my_counties, 
                       geometry = T,
                       keep_geo_vars = T)
-tract_data2 <- get_acs(geography = "tract", 
+ct_data2 <- get_acs(geography = "county", 
                        variables = my_cenvar_df$my_cen_vars, 
                        year=2018, 
                        survey="acs5",
@@ -76,7 +76,7 @@ tract_data2 <- get_acs(geography = "tract",
                        #county = my_counties, 
                        geometry = T,
                        keep_geo_vars = T)
-tract_data3 <- get_acs(geography = "tract", 
+ct_data3 <- get_acs(geography = "county", 
                        variables = my_cenvar_df$my_cen_vars, 
                        year=2018, 
                        survey="acs5",
@@ -84,7 +84,7 @@ tract_data3 <- get_acs(geography = "tract",
                        #county = my_counties, 
                        geometry = T,
                        keep_geo_vars = T)
-tract_data4 <- get_acs(geography = "tract", 
+ct_data4 <- get_acs(geography = "county", 
                        variables = my_cenvar_df$my_cen_vars, 
                        year=2018, 
                        survey="acs5",
@@ -92,7 +92,7 @@ tract_data4 <- get_acs(geography = "tract",
                        #county = my_counties, 
                        geometry = T,
                        keep_geo_vars = T)
-tract_data5 <- get_acs(geography = "tract", 
+ct_data5 <- get_acs(geography = "county", 
                        variables = my_cenvar_df$my_cen_vars, 
                        year=2018, 
                        survey="acs5",
@@ -100,7 +100,7 @@ tract_data5 <- get_acs(geography = "tract",
                        #county = my_counties, 
                        geometry = T,
                        keep_geo_vars = T)# do not know why 'ID'/ILis different from others 
-tract_data6 <- get_acs(geography = "tract", 
+ct_data6 <- get_acs(geography = "county", 
                        variables = my_cenvar_df$my_cen_vars, 
                        year=2018, 
                        survey="acs5",
@@ -112,11 +112,15 @@ tract_data6 <- get_acs(geography = "tract",
 # (1) we only keep the columns of interest - including NAME, GEOID and geometry
 # (2) each estimate variable is in its own column
 # ORDER MATTERS - infile must have cenvars in cenvar order!!!!
-tract_data_c <- rbind(tract_data,tract_data1,
-                      tract_data2,tract_data3,
-                      tract_data4,tract_data5,
-                      tract_data6)
-tract_data_c1 <- tract_data_c %>%
+ct_data_c <- rbind(ct_data,ct_data1,
+                      ct_data2,ct_data3,
+                      ct_data4,ct_data5,
+                      ct_data6)
+#tract_data_c <- rbind(tract_data,tract_data1,
+#                      tract_data2,tract_data3,
+#                      tract_data4,tract_data5,
+#                      tract_data6)
+tract_data_c1 <- ct_data_c %>%
   select("NAME.y","GEOID","ALAND","variable","estimate") %>%
   spread(key=variable, value=estimate)
 
@@ -126,7 +130,7 @@ tract_data_c1  <- tract_data_c1 [!is.na(tract_data_c1 $ALAND),]
 # Copy for debugging
 tract_data_c2 <- tract_data_c1 
 # rename columns   
-colnames(tract_data_c2) <- c("NAME","GEOID", "land_area","geometry",my_cenvar_df$my_cen_var_names)
+colnames(tract_data_c2) <- c("NAME","GEOID", "land_area",my_cenvar_df$my_cen_var_names,"geometry")
 #tract_data_c2$NAME <- gsub(", California","",tract_data2$NAME)
 
 # Remove rows with no people
@@ -215,20 +219,143 @@ tract_data_c3 <- tract_data_c2 %>%
 tract_data_c3 <- st_transform(tract_data_c3, 4326) 
 
 # WRITE output to CSV
-write_sf(tract_data_c3,"msi_tractdata_acs2018.csv", layer_options = "GEOMETRY=AS_WKT", delete_layer=TRUE, delete_dsn=TRUE)
+write_sf(tract_data_c3,"msi_countydata_acs2018.csv", layer_options = "GEOMETRY=AS_WKT", delete_layer=TRUE, delete_dsn=TRUE)
          
 # Save vars to be mapped only
-census_data <- select(tract_data_c3, "NAME", "GEOID", starts_with("p_"))
+county_data <- select(tract_data_c3, "NAME", "GEOID", starts_with("p_"))
 
 # Remove temp objects
-keep_objects <- c("census_data")
+keep_objects <- c("county_data")
 #"health_language_support","health_service_access", "health_services", 
 # "legal_language_support", "legal_service_access","legal_services")
 
 rm(list = setdiff(ls(), keep_objects))
 
 # Write Census Data to an Rdata file (census)
-save.image("census_tract_data_processed.Rdata")
+save.image("county_data_processed.Rdata")
 
 # remove objects from session
 rm(list = ls())
+
+############state data
+my_cenvar_df <-read.csv("Data_input/msi_cenvars_lut.csv", strip.white = T, stringsAsFactors = F)
+state_data <- get_acs(geography = "state", 
+                   variables = my_cenvar_df$my_cen_vars, 
+                   year=2018, 
+                   survey="acs5",
+                   #state = states, 
+                   #county = my_counties, 
+                   geometry = T,
+                   keep_geo_vars = T)
+tract_data_c1 <- state_data %>%
+  select("NAME.y","GEOID","ALAND","variable","estimate") %>%
+  spread(key=variable, value=estimate)
+#Remove rows with no land are
+tract_data_c1  <- tract_data_c1 [!is.na(tract_data_c1 $ALAND),]
+
+# Copy for debugging
+tract_data_c2 <- tract_data_c1 
+# rename columns   
+colnames(tract_data_c2) <- c("NAME","GEOID", "land_area",my_cenvar_df$my_cen_var_names,"geometry")
+#tract_data_c2$NAME <- gsub(", California","",tract_data2$NAME)
+
+# Remove rows with no people
+tract_data_c2 <- tract_data_c2[tract_data_c2$tract_totpop!=0,]
+
+# Change units for land_area from sq meters to sq km
+tract_data_c2$p_land_areakm2 <- tract_data_c2$land_area / (1000 * 1000)
+tract_data_c2$p_land_acreage <- tract_data_c2$land_area / 4046.856
+tract_data_c2$p_land_sqmiles <- tract_data_c2$land_area / 2589988.1103
+
+#tfix <- tract_data2[tract_data2$GEOID == "06041122000",]
+# Create Calculated columns
+## Note: keeping colnames short due to shapefile limits
+tract_data_c3 <- tract_data_c2 %>%
+  mutate (
+    # Immigrant noncitizens in the total pop
+    p_noncit_totpop = tract_totpop,
+    p_noncit_count = tract_fborn_noncit,
+    p_noncit = ifelse(tract_totpop==0, 0, round(100 * (tract_fborn_noncit/tract_totpop),1)),
+    p_noncit_density = ifelse(tract_totpop==0, 0, round((tract_fborn_noncit / p_land_sqmiles),1)),
+    
+    # Immigrants in the total pop
+    p_fborn_totpop = tract_totpop,
+    p_fborn_count = tract_fborn,
+    p_fborn =   ifelse(tract_totpop==0, 0, round(100 * (tract_fborn / tract_totpop), 1)),
+    p_fborn_density =  ifelse(tract_totpop==0, 0, round((tract_fborn / p_land_sqmiles),1)),
+    
+    # Recent Immigrants in the total pop
+    p_recent_totpop = tract_totpop,
+    p_recent_count = tract_post2010_fborn,
+    p_recent =  ifelse(tract_totpop==0, 0, round(100 * (tract_post2010_fborn / tract_totpop),1)),
+    p_recent_density = ifelse(tract_totpop==0, 0, round((tract_post2010_fborn / p_land_sqmiles),1)),
+    
+    # Immigrants living 150% below poverty in the Population for whom poverty has been determined
+    p_fb_pov_totpop = poverty_totpop,
+    p_fb_pov_count = (poverty_100below_fborn + poverty_100to149below_fborn),
+    p_fb_pov =  ifelse(poverty_totpop==0, 0, round(100 * ((poverty_100below_fborn + poverty_100to149below_fborn) / poverty_totpop),1)),
+    p_fb_pov_density =  ifelse(poverty_totpop==0, 0, round( ((poverty_100below_fborn + poverty_100to149below_fborn) / p_land_sqmiles),1)),
+    
+    # Immigrants with no health insurance in the Civilian Noninstitutionalized Population
+    p_fb_nohi_totpop = nohealth_totpop,
+    p_fb_nohi_count = (nohealth_fborn_nat + nohealth_fborn_noncit),
+    p_fb_nohi = ifelse(nohealth_totpop==0, 0, round(100 * (nohealth_fborn_nat + nohealth_fborn_noncit) / nohealth_totpop,1)),
+    p_fb_nohi_density = ifelse(nohealth_totpop==0, 0, round(((nohealth_fborn_nat + nohealth_fborn_noncit) / p_land_sqmiles),1)),
+    #
+    p_fb_noncit_nohi_totpop = nohealth_totpop,
+    p_fb_noncit_nohi_count = nohealth_fborn_noncit,
+    p_fb_noncit_nohi = ifelse(nohealth_totpop==0, 0, round(100 * (nohealth_fborn_noncit / nohealth_totpop),1)),
+    p_fb_noncit_nohi_density =  ifelse(nohealth_totpop==0, 0, round((nohealth_fborn_noncit / p_land_sqmiles),1)),
+    
+    # Limited english speakers by language spoken at home in the population over 5
+    # limited_english_totpop variable is the denominator
+    p_lim_eng_totpop = limited_english_totpop,
+    #spanish
+    p_lim_eng_spanish_count = limited_english_spanish,
+    p_lim_eng_spanish = ifelse(limited_english_totpop==0, 0, round(100 * (limited_english_spanish / limited_english_totpop),1)),
+    p_lim_eng_spanish_density = ifelse(limited_english_totpop==0, 0, round((limited_english_spanish / p_land_sqmiles),1)),
+    #chinese
+    p_lim_eng_chinese_count = limited_english_chinese,
+    p_lim_eng_chinese = ifelse(limited_english_totpop==0, 0, round(100 * (limited_english_chinese / limited_english_totpop),1)),
+    p_lim_eng_chinese_density = ifelse(limited_english_totpop==0, 0, round((limited_english_chinese / p_land_sqmiles),1)),
+    #tagalog
+    p_lim_eng_tagalog_count = limited_english_tagalog,
+    p_lim_eng_tagalog = ifelse(limited_english_totpop==0, 0, round(100 * (limited_english_tagalog / limited_english_totpop),1)),
+    p_lim_eng_tagalog_density = ifelse(limited_english_totpop==0, 0, round((limited_english_tagalog / p_land_sqmiles),1)),
+    #vitenamese
+    p_lim_eng_vietnamese_count = limited_english_vietnamese,
+    p_lim_eng_vietnamese = ifelse(limited_english_totpop==0, 0, round(100 * (limited_english_vietnamese / limited_english_totpop),1)),
+    p_lim_eng_vietnamese_density = ifelse(limited_english_totpop==0, 0, round((limited_english_vietnamese / p_land_sqmiles),1)),
+    #korean
+    p_lim_eng_korean_count = limited_english_korean,
+    p_lim_eng_korean = ifelse(limited_english_totpop==0, 0, round(100 * (limited_english_korean / limited_english_totpop),1)),
+    p_lim_eng_korean_density = ifelse(limited_english_totpop==0, 0, round((limited_english_korean / p_land_sqmiles),1)),
+    
+    #other - needed for determining quantile bins only
+    p_lim_eng_allgroups_count = (limited_english_spanish + limited_english_chinese + limited_english_tagalog + 
+                                   limited_english_vietnamese + limited_english_korean +
+                                   limited_english_french +  limited_english_german + limited_english_russian +
+                                   limited_english_other_indoeuropean +  limited_english_other_api +
+                                   limited_english_arabic +  limited_english_other),
+    
+    p_lim_eng_allgroups = ifelse(limited_english_totpop==0, 0, round(100 * (p_lim_eng_allgroups_count / limited_english_totpop),1))
+  )
+
+# Transforming CRS from NAD83 to WGS84 ("+proj=longlat +datum=WGS84")
+tract_data_c3 <- st_transform(tract_data_c3, 4326) 
+
+# WRITE output to CSV
+write_sf(tract_data_c3,"msi_statedata_acs2018.csv", layer_options = "GEOMETRY=AS_WKT", delete_layer=TRUE, delete_dsn=TRUE)
+
+# Save vars to be mapped only
+state_data <- select(tract_data_c3, "NAME", "GEOID", starts_with("p_"))
+
+# Remove temp objects
+keep_objects <- c("state_data")
+#"health_language_support","health_service_access", "health_services", 
+# "legal_language_support", "legal_service_access","legal_services")
+
+rm(list = setdiff(ls(), keep_objects))
+
+# Write Census Data to an Rdata file (census)
+save.image("state_data_processed.Rdata")
