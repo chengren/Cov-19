@@ -14,6 +14,7 @@ library(tidycensus)
 library(tidyr)
 library(dplyr)
 library(sf)
+library(stringr)
 
 # SET WD
 setwd("/Users/chengren/Documents/GitHub/Cov-19")
@@ -33,9 +34,9 @@ census_api_key(my_census_api_key)
 # Alameda, SF, Contra Costa, Marin County, Napa, 
 # San Mateo, Santa Clara,  Solano,  Sonoma, 
 # Removing santa cruz ("087"")
-states <- c('AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA')
+states <- c('AL','AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA')
 states1<- c('HI','IA', 'KS', 'KY', 'LA', 'ME', 'MD')
-states2 <- c('MA', 'MI',  'MN', 'MS', 'MO', 'MT', 'NE', 'NV')           
+states2 <- c('MA', 'MI',  'MN', 'MS', 'MO', 'MT', 'NE', 'NV','NH')           
 states3 <- c('NJ', 'NM', 'NY', 'NC', 'ND','OH', 'OK', 'OR', 'PA')
 states4 <- c('PR','RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA','WA', 'WV', 'WI', 'WY')
 # Identify census variable table names
@@ -223,7 +224,7 @@ write_sf(tract_data_c3,"msi_countydata_acs2018.csv", layer_options = "GEOMETRY=A
          
 # Save vars to be mapped only
 county_data <- select(tract_data_c3, "NAME", "GEOID", starts_with("p_"))
-
+county_data$state=str_split_fixed(county_data$NAME, ", ",2)[,2]
 # Remove temp objects
 keep_objects <- c("county_data")
 #"health_language_support","health_service_access", "health_services", 
