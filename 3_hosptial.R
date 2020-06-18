@@ -16,6 +16,7 @@ df <- read.csv('Hospitals.csv')
 hospitals <- df
 hospitals$id <- 1:nrow(hospitals)
 hospitals$NAME <-  toTitleCase(tolower(as.character(hospitals$NAME)))
+hospitals$NAME <-  gsub("\\bUcsf","UCSF",hospitals$NAME)
 hospitals$TYPE <-  toTitleCase(tolower(as.character(hospitals$TYPE)))
 hospitals[c("X","Y")] <- jitterDupCoords(hospitals[c("X","Y")],min=0.00001, max=0.00009)
  

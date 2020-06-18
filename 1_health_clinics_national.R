@@ -16,6 +16,9 @@ df <- read.csv('SITE_HCC_FCT_DET.csv')
 health_clinics <- df
 health_clinics$ID <- 1:nrow(health_clinics)
 health_clinics$Site.Name <- toTitleCase(tolower(as.character(health_clinics$Site.Name)))
+health_clinics$Site.Name <- gsub('Gvhc|Ghvc', 'GVHC', health_clinics$Site.Name)
+health_clinics$Site.Name <- gsub('Csvs', 'CSVS', health_clinics$Site.Name)
+health_clinics$Site.Name <- gsub('Chcrr', 'CHCRR', health_clinics$Site.Name)
 colnames(health_clinics) <- gsub("\\.\\.\\.\\.|\\.\\.", ".", colnames(health_clinics))
 health_clinics[c("Geocoding.Artifact.Address.Primary.X.Coordinate","Geocoding.Artifact.Address.Primary.Y.Coordinate")] <- jitterDupCoords(health_clinics[c("Geocoding.Artifact.Address.Primary.X.Coordinate",
                                                                                                                                                            "Geocoding.Artifact.Address.Primary.Y.Coordinate")], 
@@ -33,7 +36,9 @@ health_clinics$website <- gsub('None|NA|N/A','',health_clinics$website)
 health_clinics$website <- ifelse(substring(health_clinics$website, 1, 4) == "http"|
                                    health_clinics$website=="", 
                                  health_clinics$website, paste0("http://", health_clinics$website))
-
+health_clinics$website <- tolower(health_clinics$website)
+health_clinics$website[grep("\\bGVHC",health_clinics$Site.Name)]<- "http://www.gvhc.org"
+health_clinics$website[grep("\\bnot apply|\\bnot applicable",health_clinics$website)]<- ""
 # Format Zip Codes
 health_clinics$zipcode <- substr(health_clinics$Site.Postal.Code, 1, 5)
 #get county code
@@ -131,7 +136,7 @@ rm(list = setdiff(ls(), keep_objects))
 # SAVE DATA FOR CENSUS APP
 ####################################
 # Save the environment to be read when app starts
-save.image("~/Downloads/bimi_msi-health_clinic_national/CENSUS/census_app_data_processed.Rdata")
+save.image("/Users/chengren/Documents/GitHub/bimi_msi-health_clinic_national/CENSUS/census_app_data_processed.Rdata")
 
 # Remove all objects
 rm(list = ls())
